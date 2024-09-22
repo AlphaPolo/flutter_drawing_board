@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
+import '../../flutter_drawing_board.dart';
+import '../../paint_extension.dart';
+
 /// 绘制对象
 abstract class PaintContent {
   PaintContent();
@@ -9,6 +12,7 @@ abstract class PaintContent {
 
   /// 画笔
   late Paint paint;
+  bool? isPrimary;
 
   /// 复制实例，避免对象传递
   PaintContent copy();
@@ -24,6 +28,13 @@ abstract class PaintContent {
 
   /// 开始绘制
   void startDraw(Offset startPoint);
+
+  void setIsPrimary(bool isPrimary, DrawingController controller) {
+    this.isPrimary = isPrimary;
+    if(!isPrimary) {
+      paint = paint.copyWith(color: controller.getSecondaryColor);
+    }
+  }
 
   /// toJson
   Map<String, dynamic> toContentJson();

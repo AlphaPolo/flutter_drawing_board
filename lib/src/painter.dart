@@ -39,7 +39,7 @@ class Painter extends StatelessWidget {
       return;
     }
 
-    drawingController.startDraw(pde.localPosition);
+    drawingController.startDraw(pde.localPosition, pde.buttons);
     onPointerDown?.call(pde);
   }
 

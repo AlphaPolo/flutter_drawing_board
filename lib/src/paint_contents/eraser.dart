@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../draw_path/draw_path.dart';
-import '../paint_extension/ex_paint.dart';
 
+import   '../draw_path/draw_path.dart';
+import '../paint_extension/ex_paint.dart';
 import 'paint_content.dart';
 
 /// 橡皮

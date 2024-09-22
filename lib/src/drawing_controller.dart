@@ -17,7 +17,8 @@ class DrawConfig {
     this.fingerCount = 0,
     this.size,
     this.blendMode = BlendMode.srcOver,
-    this.color = Colors.red,
+    this.primaryColor = Colors.black,
+    this.secondaryColor = Colors.white,
     this.colorFilter,
     this.filterQuality = FilterQuality.high,
     this.imageFilter,
@@ -37,7 +38,8 @@ class DrawConfig {
     this.fingerCount = 0,
     this.size,
     this.blendMode = BlendMode.srcOver,
-    this.color = Colors.red,
+    this.primaryColor = Colors.black,
+    this.secondaryColor = Colors.white,
     this.colorFilter,
     this.filterQuality = FilterQuality.high,
     this.imageFilter,
@@ -62,7 +64,8 @@ class DrawConfig {
 
   /// Paint相关
   final BlendMode blendMode;
-  final Color color;
+  final Color primaryColor;
+  final Color secondaryColor;
   final ColorFilter? colorFilter;
   final FilterQuality filterQuality;
   final ui.ImageFilter? imageFilter;
@@ -78,7 +81,7 @@ class DrawConfig {
   /// 生成paint
   Paint get paint => Paint()
     ..blendMode = blendMode
-    ..color = color
+    ..color = primaryColor
     ..colorFilter = colorFilter
     ..filterQuality = filterQuality
     ..imageFilter = imageFilter
@@ -94,7 +97,8 @@ class DrawConfig {
   DrawConfig copyWith({
     Type? contentType,
     BlendMode? blendMode,
-    Color? color,
+    Color? primaryColor,
+    Color? secondaryColor,
     ColorFilter? colorFilter,
     FilterQuality? filterQuality,
     ui.ImageFilter? imageFilter,
@@ -114,7 +118,8 @@ class DrawConfig {
       contentType: contentType ?? this.contentType,
       angle: angle ?? this.angle,
       blendMode: blendMode ?? this.blendMode,
-      color: color ?? this.color,
+      primaryColor: primaryColor ?? this.primaryColor,
+      secondaryColor: secondaryColor ?? this.secondaryColor,
       colorFilter: colorFilter ?? this.colorFilter,
       filterQuality: filterQuality ?? this.filterQuality,
       imageFilter: imageFilter ?? this.imageFilter,
@@ -186,7 +191,10 @@ class DrawingController extends ChangeNotifier {
   int get currentIndex => _currentIndex;
 
   /// 获取当前颜色
-  Color get getColor => drawConfig.value.color;
+  Color get getPrimaryColor => drawConfig.value.primaryColor;
+
+  /// 获取当前副颜色
+  Color get getSecondaryColor => drawConfig.value.secondaryColor;
 
   /// 能否进行绘制
   bool get couldDraw => drawConfig.value.fingerCount <= 1;
@@ -222,7 +230,8 @@ class DrawingController extends ChangeNotifier {
   /// 设置绘制样式
   void setStyle({
     BlendMode? blendMode,
-    Color? color,
+    Color? primaryColor,
+    Color? secondaryColor,
     ColorFilter? colorFilter,
     FilterQuality? filterQuality,
     ui.ImageFilter? imageFilter,
@@ -238,7 +247,8 @@ class DrawingController extends ChangeNotifier {
   }) {
     drawConfig.value = drawConfig.value.copyWith(
       blendMode: blendMode,
-      color: color,
+      primaryColor: primaryColor,
+      secondaryColor: secondaryColor,
       colorFilter: colorFilter,
       filterQuality: filterQuality,
       imageFilter: imageFilter,
@@ -285,12 +295,20 @@ class DrawingController extends ChangeNotifier {
   }
 
   /// 开始绘制
-  void startDraw(Offset startPoint) {
+  void startDraw(Offset startPoint, int buttons) {
+    /// 必須是左鍵或右鍵
+    if(buttons != 1 && buttons != 2) {
+      return;
+    }
+
     if (_currentIndex == 0 && _paintContent is Eraser) {
       return;
     }
 
+    final bool isPrimary = buttons == 1;
     _startPoint = startPoint;
+
+
     if (_paintContent is Eraser) {
       eraserContent = _paintContent.copy();
       eraserContent?.paint = drawConfig.value.paint.copyWith();
@@ -298,6 +316,7 @@ class DrawingController extends ChangeNotifier {
     } else {
       currentContent = _paintContent.copy();
       currentContent?.paint = drawConfig.value.paint;
+      currentContent?.setIsPrimary(isPrimary, this);
       currentContent?.startDraw(startPoint);
     }
   }

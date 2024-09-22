@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import '../paint_extension/ex_offset.dart';
 import '../paint_extension/ex_paint.dart';
 import 'paint_content.dart';

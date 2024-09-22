@@ -1,7 +1,7 @@
 import 'package:flutter/painting.dart';
+
 import '../draw_path/draw_path.dart';
 import '../paint_extension/ex_paint.dart';
-
 import 'paint_content.dart';
 
 /// 普通自由线条
@@ -23,16 +23,23 @@ class SimpleLine extends PaintContent {
   /// 绘制路径
   DrawPath path = DrawPath();
 
-  @override
-  void startDraw(Offset startPoint) =>
-      path.moveTo(startPoint.dx, startPoint.dy);
+
+
 
   @override
-  void drawing(Offset nowPoint) => path.lineTo(nowPoint.dx, nowPoint.dy);
+  void startDraw(Offset startPoint) {
+    path.moveTo(startPoint.dx, startPoint.dy);
+  }
 
   @override
-  void draw(Canvas canvas, Size size, bool deeper) =>
-      canvas.drawPath(path.path, paint);
+  void drawing(Offset nowPoint) {
+    path.lineTo(nowPoint.dx, nowPoint.dy);
+  }
+
+  @override
+  void draw(Canvas canvas, Size size, bool deeper) {
+    canvas.drawPath(path.path, paint);
+  }
 
   @override
   SimpleLine copy() => SimpleLine();

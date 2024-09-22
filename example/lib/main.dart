@@ -235,6 +235,12 @@ class _MyHomePageState extends State<MyHomePage> {
   double _colorOpacity = 1;
 
   @override
+  void initState() {
+    _drawingController.setStyle(secondaryColor: Colors.blue);
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _drawingController.dispose();
     super.dispose();
@@ -313,7 +319,7 @@ class _MyHomePageState extends State<MyHomePage> {
         leading: PopupMenuButton<Color>(
           icon: const Icon(Icons.color_lens),
           onSelected: (ui.Color value) => _drawingController.setStyle(
-              color: value.withOpacity(_colorOpacity)),
+              primaryColor: value.withOpacity(_colorOpacity)),
           itemBuilder: (_) {
             return <PopupMenuEntry<ui.Color>>[
               PopupMenuItem<Color>(
@@ -325,7 +331,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onChanged: (double v) {
                         setState(() => _colorOpacity = v);
                         _drawingController.setStyle(
-                          color: _drawingController.drawConfig.value.color
+                          primaryColor: _drawingController.drawConfig.value.primaryColor
                               .withOpacity(_colorOpacity),
                         );
                       },
